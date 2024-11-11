@@ -4,12 +4,14 @@ import user from '../assets/user.png'
 import { MdOutlineSearch } from "react-icons/md";
 import { useEffect, useState } from 'react';
 import { navigation } from '../constants/navigation';
+import AuthSideBar from './AuthSideBar';
 
 
 const Header = () => {
     const location = useLocation();
     const removeSpace = location?.search?.slice(3)?.split("%20")?.join(" ")
     const [searchInput,setSearchInput] = useState(removeSpace)
+    const [isSidebarOpen, setSidebarOpen] = useState(false);
     const navigate = useNavigate();  
 
     useEffect(() => {
@@ -50,9 +52,13 @@ const Header = () => {
                     <MdOutlineSearch/>
                     </button>
                 </form>
-                <div className='w-10 mb-9 rounded-full overflow-hidden cursor-pointer active:scale-50 transition-all'>
+                
+                <div onClick={() => setSidebarOpen(true)} 
+                    className='w-10 mb-9 rounded-full overflow-hidden cursor-pointer 
+                    active:scale-50 transition-all'>
                     <img  src={user} width='w-ful h-full' />
                 </div>
+                <AuthSideBar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
             </div>
         </div>
     </header>

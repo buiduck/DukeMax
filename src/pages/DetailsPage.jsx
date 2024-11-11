@@ -40,7 +40,9 @@ const DetailsPage = () => {
             <div className="container mx-auto px-3 py-13 lg:py-0 flex flex-col lg:flex-row gap-5 lg:gap-10">
                 <div className="relative mx-auto lg:-mt-28 lg:mx-0 w-fit min-w-60">
                      <img src={imageURL+data?.poster_path} className='h-80 w-60 object-cover rounded'/>
-                     <button onClick={() => handlePlayVideo(data)} className="  bg-white text-lg text-slate-800 mt-3 px-4 py-2 rounded-xl bold w-full hover:bg-gradient-to-l from-orange-500 to-red-500 hover:scale-103 transition-all">Xem phim</button>
+                     <button onClick={() => handlePlayVideo(data)} className="  bg-white text-lg text-slate-800 mt-3 px-4 py-2
+                      rounded-xl bold w-full hover:bg-gradient-to-l from-orange-500
+                       to-red-500 hover:scale-103 transition-all">Xem phim</button>
                 </div>
 
                 <div>
@@ -67,7 +69,7 @@ const DetailsPage = () => {
                           <Divider/>
                           <div className='flex items-center gap-3 my-3 text-center'>
                                 <p>
-                                  Staus : {data?.status}
+                                  Status : {data?.status}
                                 </p>
                                 <span>|</span>
                                 <p>

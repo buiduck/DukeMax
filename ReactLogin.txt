@@ -1,0 +1,124 @@
+// AuthSidebar.js
+import { useState } from "react";
+import { MdPerson, MdLock, MdEmail } from "react-icons/md"; 
+
+const AuthSideBar = ({ isOpen, onClose }) => {
+    const [isLogin, setIsLogin] = useState(true); // Biến trạng thái để chuyển đổi giữa đăng nhập và đăng ký
+
+    // Đóng modal khi bấm ra ngoài
+    const handleOverlayClick = (e) => {
+        if (e.target === e.currentTarget) {
+            onClose();
+        }
+    };
+
+    return (
+        <div
+            className={`fixed top-0 right-0 h-full w-full bg-black bg-opacity-40 z-50 transition-all ${
+                isOpen ? "visible opacity-100" : "invisible opacity-0"
+            }`}
+            onClick={handleOverlayClick}
+        >
+            {/* Sidebar */}
+            <div
+                className={`fixed top-0 right-0 h-full w-80 bg-slate-800 p-6 transform transition-transform ${
+                    isOpen ? "translate-x-0" : "translate-x-full"
+                }`}
+            >
+                <button onClick={onClose} className="text-gray-400 text-xl absolute top-4 right-4">
+                    X
+                </button>
+
+                
+                 <div className=" my-5">
+                        <h1 className="text-xl">Chào khách!</h1>
+                 </div>
+                {/* Tabs để chuyển đổi giữa Đăng nhập và Đăng ký */}
+                <div className="flex justify-around mb-6 text-lg font-semibold">
+                    <button
+                        onClick={() => setIsLogin(true)}
+                        className={`${isLogin ? "text-blue-400 border-b-2 border-blue-400" : "text-gray-400"}`}
+                        required
+                    >
+                        Đăng nhập
+                    </button>
+                    <button
+                        onClick={() => setIsLogin(false)}
+                        className={`${!isLogin ? "text-blue-400 border-b-2 border-blue-400" : "text-gray-400"}`}
+                        required
+                    >
+                        Đăng ký
+                    </button>
+                </div>
+
+                {/* Form đăng nhập */}
+                {isLogin ? (
+                    <form className="flex flex-col space-y-4">
+                        <div className="flex items-center border p-2.5 rounded-md">
+                            <MdPerson className="text-gray-400 mr-2 text-xl" />
+                            <input
+                                type="text"
+                                placeholder="Tên đăng nhập"
+                                className="flex-1 outline-none text-blue-950"
+                                required
+                            />
+                        </div>
+                        <div className="flex items-center border p-2.5 rounded-md">
+                            <MdLock className="text-gray-400 mr-2 text-xl" />
+                            <input
+                                type="password"
+                                placeholder="Mật khẩu"
+                                className="flex-1 outline-none text-blue-950"
+                                required
+                            />
+                        </div>
+                        <button className="bg-indigo-400 text-white p-2.5 rounded-md hover:bg-indigo-500">Đăng nhập</button>
+                    </form>
+                ) : (
+                    // Form đăng ký
+                    <form className="flex flex-col space-y-4">
+                       <div className="flex items-center border p-2.5 rounded-md">
+                            <MdPerson className="text-gray-400 mr-2 text-xl " />
+                            <input
+                                type="text"
+                                placeholder="Tên đăng nhập"
+                                className="flex-1 outline-none  text-blue-950"
+                                required
+                            />
+                        </div>
+                        <div className="flex items-center border p-2.5 rounded-md">
+                            <MdLock className="text-gray-400 mr-2 text-xl " />
+                            <input
+                                type="password"
+                                placeholder="Mật khẩu"
+                                className="flex-1 outline-none text-blue-950"
+                                required
+                            />
+                        </div>
+                        <div className="flex items-center border p-2.5 rounded-md">
+                            <MdPerson className="text-gray-400 mr-2 text-xl" />
+                            <input
+                                type="text"
+                                placeholder="Tên hiển thị"
+                                className="flex-1 outline-none text-blue-950"
+                                required 
+                            />
+                        </div>
+                        <div className="flex items-center border p-2.5 rounded-md">
+                            <MdEmail className="text-gray-400 mr-2 text-xl" />
+                            <input
+                                type="email"
+                                placeholder="Email"
+                                className="flex- outline-none text-blue-950"
+                                required
+                            />
+                        </div>
+                        <button className="bg-indigo-400 text-white p-2.5 rounded-md hover:bg-indigo-500">Đăng ký</button>
+                    </form>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default AuthSideBar;
