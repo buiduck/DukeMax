@@ -4,20 +4,18 @@ import HorizontalScollCard from "../components/HorizontalScollCard"
 import useFetch from "../hooks/useFetch"
 
 const Home = () => {
-  const trendingData = useSelector(state => state.dukemaxData.bannerData)
-  const { data : nowPlayingData} = useFetch('/movie/now_playing')
-  const { data : topRatedData} = useFetch('/movie/top_rated')
-  const { data : popularData} = useFetch('/tv/popular')
-  const { data : onTheAirShowData } = useFetch('/tv/on_the_air')
+  const { data: leData } = useFetch('https://phimapi.com/v1/api/danh-sach/phim-le');
+  const { data: boData } = useFetch('https://phimapi.com/v1/api/danh-sach/phim-bo');
+  const { data: hoathinhData } = useFetch('https://phimapi.com/v1/api/danh-sach/hoat-hinh');
+  const { data: onTheAirShowData } = useFetch('https://phimapi.com/v1/api/danh-sach/tv-shows');
 
   return (
     <div>
        <BannerHome/>
-       <HorizontalScollCard  data={trendingData} heading={"Phim lẻ mới"} trending={true}/>
-       <HorizontalScollCard  data={nowPlayingData} heading={"Xem ngay bây giờ"} media_type={"movie"}/>
-       <HorizontalScollCard  data={topRatedData} heading={"Bảng Xếp hạng hàng đầu"} media_type={"movie"}/>
-       <HorizontalScollCard  data={popularData} heading={"Chương trình TV phổ biển"}  media_type={"tv"}/>
-       <HorizontalScollCard data={onTheAirShowData} heading={"Đang phát sóng"} media_type={"tv"}/>
+       <HorizontalScollCard data={leData} heading={"Phim lẻ"} media_type={"movie"} />
+       <HorizontalScollCard data={boData} heading={"Phim bộ"} media_type={"movie"} />
+       <HorizontalScollCard data={hoathinhData} heading={"Hoạt hình"} media_type={"movie"} />
+       <HorizontalScollCard data={onTheAirShowData} heading={"Chương trình TV"} media_type={"tv"} />
     </div>
   )
 }

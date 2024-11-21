@@ -14,26 +14,28 @@ function App() {
 
   const fetchTrendingData = async ()=>{
     try{
-      const response = await axios.get('/trending/all/week')
+      const response = await axios.get('/danh-sach/phim-moi-cap-nhat?page=1')
 
-      dispatch(setBannerData(response.data.results))
+       dispatch(setBannerData(response.data.items))
+      console.log("respone",response.data.items)
     }catch(error){
       console.log("error",error)
     }
   }
-  const fetchConfiguration = async () => {
-    try {
-        const response = await axios.get("/configuration")
+  // const fetchConfiguration = async () => {
+  //   try {
+  //       const response = await axios.get('https://phimimg.com')
 
-        dispatch(setImageURL(response.data.images.secure_base_url+"original"))
-    } catch (error) {
-      console.log("error",error)
-    }
-  }
+  //       dispatch(setImageURL(response.data.items))
+  //       console.log("respone",response.data.items)
+  //   } catch (error) {
+  //     console.log("error",error)
+  //   }
+  // }
 
   useEffect(()=>{
     fetchTrendingData()
-    fetchConfiguration()
+    // fetchConfiguration()
   },[])
 
   return (
@@ -49,3 +51,5 @@ function App() {
 }
 
 export default App;
+
+

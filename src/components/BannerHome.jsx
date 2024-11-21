@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const BannerHome = () => {
     const bannerData = useSelector(state => state.dukemaxData.bannerData)
-    const imageURL = useSelector(state => state.dukemaxData.imageURL)
+    // const imageURL = useSelector(state => state.dukemaxData.imageURL)
     const [currentImage,setCurrentImage] = useState(0)
 
     const handleprevious =()=>{
@@ -28,7 +28,7 @@ const BannerHome = () => {
         },5000)
 
         return ()=>clearInterval(interval)
-    },[bannerData,imageURL,currentImage])
+    },[bannerData,currentImage])
 
   return (
     <section className='h-full w-full'>
@@ -38,7 +38,7 @@ const BannerHome = () => {
                         <div key={data.id+"bannerHome"+index} className='min-w-full min-h-[450px] lg:min-h-full overflow-hidden relative group transition-all' 
                         style={{ transform : `translateX(-${currentImage * 100}%)`}}>
                             <div className='w-full h-full'>
-                                <img src={imageURL+data.backdrop_path}  className='h-full w-full object-cover'/>
+                                <img src={data.thumb_url}  className='h-full w-full object-cover'/>
                             </div>
 
                                 {/***button next and previous image */}
@@ -58,9 +58,9 @@ const BannerHome = () => {
                                     <h2 className='font-bold text-2xl lg:text-4xl text-white drop-shadow-2xl '>{data?.title || data?.name}</h2>
                                     <p className='text-ellipsis line-clamp-3 my-2'>{data.overview}</p>
                                     <div className='flex items-center gap-5'>
-                                        <p>Rating : { Number(data.vote_average).toFixed(1) }+</p>
+                                        <p>Rating : Đang cập nhật </p>
                                         <span>|</span>
-                                        <p>View : { Number(data.popularity).toFixed(0) }</p>
+                                        <p>View : Đang cập nhật</p>
                                     </div>
                                     <Link to={"/"+data?.media_type+"/"+data.id}>
                                         <button  className=' bg-white px-4 py-2 text-black font-bold rounded mt-4  hover:bg-gradient-to-l from-orange-600 to-green-500 shadow-md transition-all hover:scale-105'>

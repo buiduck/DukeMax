@@ -19,3 +19,9 @@ export const dukemaxSlice = createSlice({
 export const { setBannerData, setImageURL } = dukemaxSlice.actions
 
 export default dukemaxSlice.reducer
+
+
+
+
+
+
