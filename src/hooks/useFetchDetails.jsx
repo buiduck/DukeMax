@@ -10,7 +10,7 @@ const useFetchDetails = (endpoint)=>{
             setLoading(true)
             const response = await axios.get(endpoint)
             setLoading(false)
-            setData(response.data)
+            setData(response.data.movie)
         } catch (error) {
             console.log('error',error)
        }

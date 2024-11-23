@@ -14,7 +14,7 @@ function App() {
 
   const fetchTrendingData = async ()=>{
     try{
-      const response = await axios.get('/danh-sach/phim-moi-cap-nhat?page=1')
+      const response = await axios.get('/danh-sach/phim-moi-cap-nhat?page=3')
 
        dispatch(setBannerData(response.data.items))
       console.log("respone",response.data.items)

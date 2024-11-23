@@ -1,8 +1,8 @@
-import useFetchDetails from "../hooks/useFetchDetails"
+
 import { IoClose } from "react-icons/io5";
 
-const VideoPlay = ({media_type,close,data}) => {
-  const {data : videoData} = useFetchDetails(`/${media_type}/${data?.id}/videos`)
+const VideoPlay = ({close,data}) => {
+  // const {data : videoData} = useFetchDetails(`/${media_type}/${data?.id}/videos`)
   return (
     <section className='fixed bg-neutral-700 top-0 right-0 bottom-0 left-0 z-40 bg-opacity-50 flex justify-center items-center'>
         <div className=" bg-black w-full h-[80vh] max-w-screen-lg aspect-video rounded relative">
@@ -10,10 +10,16 @@ const VideoPlay = ({media_type,close,data}) => {
               <IoClose/>
           </button>
 
-          <iframe
+          {/* <iframe
             src={`https://www.youtube.com/embed/${videoData?.results[0]?.key}`}
             className='w-full h-full'
-          />
+          /> */}
+          <iframe
+          src={data?.trailer_url?.replace("watch?v=", "embed/")} // Chuyển đổi URL để nhúng YouTube
+          className="w-full h-full"
+          allowFullScreen
+          title="Trailer"
+        />
 
         </div>
     </section>

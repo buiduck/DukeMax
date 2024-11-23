@@ -4,6 +4,7 @@ import Home from '../pages/Home'
 import ExplorePage from '../pages/ExplorePage'
 import DetailsPage from '../pages/DetailsPage'
 import SearchPage from '../pages/SearchPage';
+import WatchMovie from '../pages/WatchMovie'
 const router =  createBrowserRouter([
     {
         path:'/',
@@ -24,6 +25,10 @@ const router =  createBrowserRouter([
             {
                 path:"search",
                 element: <SearchPage/>
+            },
+            {
+                path: "watch/:movieSlug", 
+                element: <WatchMovie />
             }
         ]
     }

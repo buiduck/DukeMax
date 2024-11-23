@@ -167,7 +167,7 @@ const SearchPage = () => {
         {/* Hiển thị danh sách kết quả tìm kiếm */}
         <div className="grid grid-cols-[repeat(auto-fit,230px)] gap-6 justify-center lg:justify-start">
           {data.map((searchData, index) => (
-            <Card data={searchData} key={searchData.id + "search"} media_type={searchData.media_type} />
+            <Card data={searchData} key={searchData.id + "search"}  /> // bo thu mediatype ("/" + mediaType + )
           ))}
         </div>
       </div>

@@ -141,7 +141,7 @@ const ExplorePage = () => {
             <Card
               data={item}
               key={item.id + "exploreSection"}
-              media_type={params.explore}
+              //media_type={params.explore} Bo thu media type
             />
           ))}
         </div>
