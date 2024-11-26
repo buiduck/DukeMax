@@ -67,15 +67,6 @@ const Card = ({ data, trending, index, media_type }) => {
                     No image found
                 </div>
             )}
-
-            <div className="absolute top-1">
-                {trending && (
-                    <div className="py-1 px-4 backdrop-blur-3xl rounded-r-full bg-black/500 overflow-hidden">
-                        #{index} Trending
-                    </div>
-                )}
-            </div>
-
             <div className="absolute bottom-1 h-16 backdrop-blur-3xl w-full bg-black/60 p-2">
                 <h2 className="text-ellipsis line-clamp-1 text-lg font-semibold">
                     {data?.name}

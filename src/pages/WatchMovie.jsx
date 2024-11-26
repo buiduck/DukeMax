@@ -27,7 +27,11 @@ const WatchMovie = () => {
   }, [movieSlug]);
 
   if (!movieData) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="border-t-4 border-blue-500 border-solid  w-16 h-16 rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
   // Kiểm tra nếu là phim bộ hay phim lẻ
@@ -70,14 +74,15 @@ const WatchMovie = () => {
           <h3 className="text-xl font-semibold mb-4">Danh sách các tập phim</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {episodes.map((episode, index) => (
-              <button
-                key={episode.slug}
-                className={`bg-orange-500 text-white p-2 rounded-md hover:bg-orange-600 transition-all ${
-                  selectedEpisode === episode.link_embed ? 'bg-orange-700' : ''
-                }`}
-                onClick={() => setSelectedEpisode(episode.link_embed)} // Chọn tập phim
-              >
-                {episode.name}
+              <button key={episode.slug}
+                  className={`p-2 rounded-md transition-all
+                      ${selectedEpisode === episode.link_embed 
+                        ? 'bg-blue-600 text-white'  
+                        : 'bg-white text-slate-800'} 
+                      hover:bg-gradient-to-l hover:from-green-500 hover:to-blue-500 hover:scale-105`}
+                    onClick={() => setSelectedEpisode(episode.link_embed)} // Chọn tập phim
+                     >
+                    {episode.name}
               </button>
             ))}
           </div>

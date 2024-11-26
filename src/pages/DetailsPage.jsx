@@ -177,7 +177,6 @@ const DetailsPage = () => {
                         </button>
                             {/* Nút Xem Phim */}
                         <button 
-                              // onClick={() => handleWatchMovie(data)} 
                               className="bg-white text-lg text-slate-800 py-2 
                                           rounded-xl font-bold w-1/2 hover:bg-gradient-to-l  
                                         from-green-500 to-blue-500 hover:scale-103 
