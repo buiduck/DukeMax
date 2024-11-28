@@ -1,4 +1,4 @@
-import {MdLocalMovies,MdLiveTv,MdHome,MdOutlineSearch} from "react-icons/md";
+import {MdLocalMovies,MdLiveTv,MdHome,MdOutlineSearch,MdDescription} from "react-icons/md";
 export const navigation =[
     {
         label:"Truyền hình tv",
@@ -9,6 +9,11 @@ export const navigation =[
         label:"Phim chiếu rạp",
         href: 'movie',
         icon :<MdLocalMovies/>
+    },
+    {
+        label: "Tin tức",  // Thêm mục "Blog"
+        href: 'blog',
+        icon: <MdDescription />  // Bạn có thể chọn icon phù hợp
     }
 ]
  export const mobileNavigation = [

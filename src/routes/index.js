@@ -12,7 +12,9 @@ import AdminUserList from '../admin/user/AdminUserList';
 import AdminAddUser from '../admin/user/AdminAddUser';
 import AdminEditUser from '../admin/user/AdminEditUser';
 import AdminAddMovie from '../admin/movie/AdminAddMovie';
-import AdminEditMovie from '../admin/movie/AdminEditMovie';
+import AdminEditMovie from '../admin/movie/AdminEditMovie'
+import BlogPage from '../pages/BlogPage';
+import AdminBlogList from '../admin/blog/AdminBlogList'
 
 const router = createBrowserRouter([
   {
@@ -24,11 +26,11 @@ const router = createBrowserRouter([
         element: <Home />
       },
       {
-        path: 'explore',
+        path: ':explore',
         element: <ExplorePage />
       },
       {
-        path: 'explore/:id',
+        path: ':explore/:id',
         element: <DetailsPage />
       },
       {
@@ -39,6 +41,10 @@ const router = createBrowserRouter([
         path: 'watch/:movieSlug',
         element: <WatchMovie />
       },
+      {
+        path: 'blog',
+        element: <BlogPage />
+      }
     ]
   },
   {
@@ -56,6 +62,10 @@ const router = createBrowserRouter([
       {
         path: 'users',
         element: <AdminUserList />
+      },
+      {       
+        path: 'blog',
+        element: <AdminBlogList />  
       },
       {
         path: 'movies/add-movie',

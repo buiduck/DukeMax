@@ -33,6 +33,13 @@ const AdminLayout = () => {
             <MdPeople className="w-6 h-6 mr-2" />
             Quản Lý Tài Khoản
           </Link>
+          <Link 
+            to="/admin/blog" 
+            className={`flex items-center p-2 rounded transition-all duration-300 ${location.pathname === '/admin/blog' ? 'bg-blue-600' : 'hover:bg-blue-600'}`}
+          >
+            <MdPeople className="w-6 h-6 mr-2" />
+            Quản Lý Tin Tức
+          </Link>
         </nav>
       </div>
 
