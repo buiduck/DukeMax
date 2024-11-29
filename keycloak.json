@@ -1,0 +1,14 @@
+{
+  "realm": "Javascript",
+  "url": "http://localhost:8080/",
+  "ssl-required": "external",
+  "client-id": "javascript-client",
+  "verify-token-audience": true,
+  "credentials": {
+    "secret": "diItEA84Iy4d556XFWLYDELc9FZfm9qZ"
+  },
+  "confidential-port": 0,
+  "policy-enforcer": {
+    "credentials": {}
+  }
+}

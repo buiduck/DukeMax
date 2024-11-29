@@ -1,7 +1,9 @@
-import { useState } from "react";
-import { MdPerson, MdLock, MdEmail } from "react-icons/md";
+import {useState} from "react";
+import {MdEmail, MdLock, MdPerson} from "react-icons/md";
+import { useKeycloak } from '@react-keycloak/web'
+import KeycloakService from "./keycloak";
 
-const AuthSideBar = ({ isOpen, onClose }) => {
+const AuthSideBar = ({isOpen, onClose}) => {
     const [isLogin, setIsLogin] = useState(true);
     const [formData, setFormData] = useState({
         username: "",
@@ -10,10 +12,13 @@ const AuthSideBar = ({ isOpen, onClose }) => {
         email: "",
     });
     const [errorMessage, setErrorMessage] = useState("");
-    
+
+    const { keycloak, initialized } = useKeycloak()
+
+
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        const {name, value} = e.target;
+        setFormData((prev) => ({...prev, [name]: value}));
     };
 
     // Đóng modal khi bấm ra ngoài
@@ -64,32 +69,9 @@ const AuthSideBar = ({ isOpen, onClose }) => {
     // Hàm gửi dữ liệu đăng nhập
     const handleLogin = async (e) => {
         e.preventDefault();
+        keycloak.login();
 
-        try {
-            const response = await fetch("/api/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    username: formData.username,
-                    password: formData.password,
-                }),
-            });
 
-            const data = await response.json();
-
-            if (data.success) {
-                // Đăng nhập thành công
-                localStorage.setItem("token", data.token); // Lưu token vào localStorage
-                setErrorMessage("");
-                onClose(); // Đóng modal
-            } else {
-                setErrorMessage(data.message || "Sai tên đăng nhập hoặc mật khẩu!");
-            }
-        } catch (error) {
-            setErrorMessage("Lỗi kết nối với máy chủ!");
-        }
     };
 
     return (
@@ -110,6 +92,15 @@ const AuthSideBar = ({ isOpen, onClose }) => {
 
                 <div className="my-5">
                     <h1 className="text-xl">Chào khách!</h1>
+                    <h3>Xin chào {KeycloakService.getUsername()}</h3>
+                    <button
+                        onClick={() =>{
+                            keycloak.login();
+                        }}
+                        className={`${isLogin ? "text-blue-400 border-b-2 border-blue-400" : "text-gray-400"}`}
+                    >
+                        Đăng nhập
+                    </button>
                 </div>
 
                 <div className="flex justify-around mb-6 text-lg font-semibold">
@@ -131,87 +122,6 @@ const AuthSideBar = ({ isOpen, onClose }) => {
                     <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
                 )}
 
-                {isLogin ? (
-                    <form className="flex flex-col space-y-4" onSubmit={handleLogin}>
-                        <div className="flex items-center border p-2.5 rounded-md">
-                            <MdPerson className="text-gray-400 mr-2 text-xl" />
-                            <input
-                                type="text"
-                                placeholder="Tên đăng nhập"
-                                name="username"
-                                value={formData.username}
-                                onChange={handleChange}
-                                className="flex-1 outline-none text-blue-950"
-                                required
-                            />
-                        </div>
-                        <div className="flex items-center border p-2.5 rounded-md">
-                            <MdLock className="text-gray-400 mr-2 text-xl" />
-                            <input
-                                type="password"
-                                placeholder="Mật khẩu"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                className="flex-1 outline-none text-blue-950"
-                                required
-                            />
-                        </div>
-                        <button className="bg-indigo-400 text-white p-2.5 rounded-md hover:bg-indigo-500">Đăng nhập</button>
-                    </form>
-                ) : (
-                    <form className="flex flex-col space-y-4" onSubmit={handleRegister}>
-                        <div className="flex items-center border p-2.5 rounded-md">
-                            <MdPerson className="text-gray-400 mr-2 text-xl" />
-                            <input
-                                type="text"
-                                placeholder="Tên đăng nhập"
-                                name="username"
-                                value={formData.username}
-                                onChange={handleChange}
-                                className="flex-1 outline-none text-blue-950"
-                                required
-                            />
-                        </div>
-                        <div className="flex items-center border p-2.5 rounded-md">
-                            <MdLock className="text-gray-400 mr-2 text-xl" />
-                            <input
-                                type="password"
-                                placeholder="Mật khẩu"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                className="flex-1 outline-none text-blue-950"
-                                required
-                            />
-                        </div>
-                        <div className="flex items-center border p-2.5 rounded-md">
-                            <MdPerson className="text-gray-400 mr-2 text-xl" />
-                            <input
-                                type="text"
-                                placeholder="Tên hiển thị"
-                                name="displayName"
-                                value={formData.displayName}
-                                onChange={handleChange}
-                                className="flex-1 outline-none text-blue-950"
-                                required
-                            />
-                        </div>
-                        <div className="flex items-center border p-2.5 rounded-md">
-                            <MdEmail className="text-gray-400 mr-2 text-xl" />
-                            <input
-                                type="email"
-                                placeholder="Email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                className="flex-1 outline-none text-blue-950"
-                                required
-                            />
-                        </div>
-                        <button className="bg-indigo-400 text-white p-2.5 rounded-md hover:bg-indigo-500">Đăng ký</button>
-                    </form>
-                )}
             </div>
         </div>
     );

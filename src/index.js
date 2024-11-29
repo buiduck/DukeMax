@@ -13,6 +13,7 @@ import {store} from './store/store.jsx'
 axios.defaults.baseURL = "https://phimapi.com";
 // axios.defaults.headers.common['Authorization'] = `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`
 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   //<React.StrictMode>

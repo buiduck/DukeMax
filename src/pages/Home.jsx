@@ -1,5 +1,4 @@
 import BannerHome from "../components/BannerHome"
-import { useSelector } from 'react-redux'
 import HorizontalScollCard from "../components/HorizontalScollCard"
 import useFetch from "../hooks/useFetch"
 
