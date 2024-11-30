@@ -7,8 +7,6 @@ import axios from 'axios';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {setBannerData} from './store/dukemaxSlice';
-import {ReactKeycloakProvider} from "@react-keycloak/web";
-import KeycloakService from "./components/keycloak";
 
 function App() {
     const dispatch = useDispatch();
@@ -39,20 +37,15 @@ function App() {
     }, [])
 
     return (
-        <ReactKeycloakProvider authClient={KeycloakService.keycloak} initOptions={{
-            onLoad: 'check-sso',
-            checkLoginIframe: false
 
-        }}>
-            <main className='pb-14 lg:pb-0'>
-                <Header/>
-                <div className='pt-16 min-h-[90vh]'>
-                    <Outlet/>
-                </div>
-                <Footer/>
-                <MobileNavigation/>
-            </main>
-        </ReactKeycloakProvider>
+        <main className='pb-14 lg:pb-0'>
+            <Header/>
+            <div className='pt-16 min-h-[90vh]'>
+                <Outlet/>
+            </div>
+            <Footer/>
+            <MobileNavigation/>
+        </main>
     );
 }
 

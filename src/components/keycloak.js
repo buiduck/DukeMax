@@ -1,13 +1,15 @@
 import Keycloak from "keycloak-js";
+import {APP_MODE} from "../constants/appMode";
 
 const keycloak = new Keycloak({
-    url: "http://localhost:8080",
-    realm: "Javascript",
-    clientId: "javascript-client"
+    url: process.env.REACT_APP_KEYCLOAK_URL,
+    realm: process.env.REACT_APP_KEYCLOAK_REALM,
+    clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID,
 });
 const doLogin = keycloak.login;
 
 const doLogout = keycloak.logout;
+
 
 const getToken = () => keycloak.token;
 
@@ -23,7 +25,18 @@ const updateToken = (successCallback) =>
 
 const getUsername = () => keycloak.tokenParsed?.preferred_username;
 
-const hasRole = (roles) => roles.some((role) => keycloak.hasRealmRole(role));
+
+const hasResourceRole = (roles) => {
+    const rolesArray = Array.isArray(roles) ? roles : [roles];
+
+    if (process.env.REACT_APP_NODE_ENV === APP_MODE.DEVELOPMENT) {
+        console.debug("Checking roles: ", rolesArray);
+
+        const access = keycloak.resourceAccess[keycloak.clientId];
+        console.debug("Role from user: " + access.roles);
+    }
+    return rolesArray.every((role) => keycloak.hasResourceRole(role));
+};
 
 const KeycloakService = {
     doLogin,
@@ -33,7 +46,7 @@ const KeycloakService = {
     getTokenParsed,
     updateToken,
     getUsername,
-    hasRole,
+    hasResourceRole,
     keycloak,
 };
 
