@@ -12,10 +12,9 @@ function App() {
     const dispatch = useDispatch();
     const fetchTrendingData = async () => {
         try {
-            const response = await axios.get('/danh-sach/phim-moi-cap-nhat?page=1')
+            const response = await axios.get('/api/movie/slider/')
 
-            dispatch(setBannerData(response.data.items))
-            console.log("respone", response.data.items)
+            dispatch(setBannerData(response.data.data))
         } catch (error) {
             console.log("error", error)
         }

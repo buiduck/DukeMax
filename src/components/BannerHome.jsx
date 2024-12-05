@@ -38,7 +38,7 @@ const BannerHome = ({media_type}) => {
                         <div key={data.id+"bannerHome"+index} className='min-w-full min-h-[450px] lg:min-h-full overflow-hidden relative group transition-all' 
                         style={{ transform : `translateX(-${currentImage * 100}%)`}}>
                             <div className='w-full h-full'>
-                                <img src={data.thumb_url}  className='h-full w-full object-cover'/>
+                                <img src={data.ThumbUrl}  className='h-full w-full object-cover'/>
                             </div>
 
                                 {/***button next and previous image */}
@@ -55,15 +55,15 @@ const BannerHome = ({media_type}) => {
                             </div>
                             <div className='container  mx-auto'>
                                <div className='w-full absolute bottom-20 max-w-md px-3'> 
-                                    <h2 className='font-bold text-2xl lg:text-4xl text-white drop-shadow-2xl '>{data?.name}</h2>
-                                    <h2 className='font-bold text-2xl lg:text-4xl text-white drop-shadow-2xl'>({data?.origin_name})</h2>
-                                    {/* <p className='text-ellipsis line-clamp-3 my-2'>{data.overview}</p> */}
+                                    <h2 className='font-bold text-2xl lg:text-4xl text-white drop-shadow-2xl '>{data?.Name}</h2>
+                                    <h2 className='font-bold text-2xl lg:text-4xl text-white drop-shadow-2xl'>({data?.OriginName})</h2>
+                                    <p className='text-ellipsis line-clamp-3 text-xl my-2'>{data.Content}</p>
                                     <div className='flex items-center gap-5'>
-                                        <p>Năm : {data.year}</p>
+                                        <p>Năm : {data.Year}</p>
                                         <span>|</span>
-                                        <p>View : Đang cập nhật</p>
+                                        <p>Ngôn ngữ: {data.Lang}</p>
                                     </div>
-                                    <Link to={"/phim/"+data.slug}>
+                                    <Link to={"/phim/"+data.Slug}>
                                         <button  className=' bg-white px-4 py-2 text-black font-bold rounded mt-4  hover:bg-gradient-to-l from-orange-600 to-green-500 shadow-md transition-all hover:scale-105'>
                                                     Play Now
                                         </button>

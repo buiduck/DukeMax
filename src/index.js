@@ -12,7 +12,7 @@ import {ReactKeycloakProvider} from "@react-keycloak/web";
 
 // Set up AXIOS
 // axios.defaults.baseURL="https://api.themoviedb.org/3";
-axios.defaults.baseURL = "https://phimapi.com";
+axios.defaults.baseURL = "http://167.71.194.240:17703";
 // axios.defaults.headers.common['Authorization'] = `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`
 
 

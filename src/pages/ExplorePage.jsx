@@ -48,7 +48,7 @@
 //     window.addEventListener('scroll',handleScroll)
 // },[])
 
-  
+
 //   return (
 //     <div className="py-10">
 //         <div className=" container mx-auto">
@@ -83,110 +83,130 @@ const ExplorePage = () => {
   const [totalPageNo, setTotalPageNo] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  // Xác định URL API dựa trên params.explore
-  const apiURL =
-    params.explore === "movie"
-      ? "/v1/api/danh-sach/phim-le"
-      : "/v1/api/danh-sach/tv-shows";
+  const movieURL = `/api/movie/filter?type=single&pageNumber=${pageNo}&pageSize=36`;
+  const seriesURL = `/api/movie/filter?type=tvshows&pageNumber=${pageNo}&pageSize=36`;
 
-  // Hàm fetch dữ liệu
   const fetchData = async () => {
-    if (loading) return; // Không gọi API nếu đang tải dữ liệu
+    if (loading) return;
 
-    setLoading(true); // Bắt đầu loading
+    setLoading(true);
 
     try {
-      const response = await axios.get(apiURL, {
-        params: {
-          page: pageNo,
-          limit: 36,
-        },
-      });
+      const response = await axios.get(
+          params.explore === "movie" ? movieURL : seriesURL
+      );
 
-      setData(response.data.data.items); // Lấy 'items' từ response
-      setTotalPageNo(response.data.data.params.pagination?.totalPages || 0); // Lấy totalPages nếu có
+      if (response.data) {
+        const { data: movies } = response.data; // Lấy dữ liệu và tổng số trang
+        setData(movies.pageData || []); // Gán dữ liệu phim
+        setTotalPageNo(movies.totalPages || 0); // Gán tổng số trang
+        console.log("Fetched Data:", movies.pageData);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      setLoading(false); // Kết thúc loading
+      setLoading(false);
     }
   };
 
-  // Fetch dữ liệu khi thay đổi page
   useEffect(() => {
     fetchData();
   }, [pageNo]);
 
-  // Reset dữ liệu khi params.explore thay đổi
   useEffect(() => {
     setPageNo(1);
-    setData([]); // Reset data khi đổi trang
+    setData([]);
   }, [params.explore]);
 
-  // Hàm render phân trang
   const renderPagination = () => {
-    const pages = [];
-    const startPage = Math.max(1, pageNo - 3); // Hiển thị trang bắt đầu từ 3 trang trước trang hiện tại (nếu có)
-    const endPage = Math.min(totalPageNo, startPage + 6); // Hiển thị tối đa 7 trang
+    if (totalPageNo <= 1) return null;
 
-    // Render các nút phân trang
+    const pages = [];
+    const startPage = Math.max(1, pageNo - 3);
+    const endPage = Math.min(totalPageNo, startPage + 6);
+
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
-        <button
-          key={i}
-          onClick={() => setPageNo(i)}
-          className={`px-4 py-2 rounded-lg mx-1 ${
-            i === pageNo
-              ? "bg-blue-500 text-white"
-              : "bg-gray-300 hover:bg-blue-500 text-gray-800"
-          }`}
-        >
-          {i}
-        </button>
+          <button
+              key={i}
+              onClick={() => setPageNo(i)}
+              className={`px-4 py-2 rounded-md mx-1 ${
+                  i === pageNo
+                      ? "bg-blue-500 text-white font-bold"
+                      : "bg-gray-200 hover:bg-blue-500 hover:text-white text-gray-800"
+              }`}
+          >
+            {i}
+          </button>
       );
     }
 
-    return pages;
+    return (
+        <div className="flex justify-center text-slate-700 space-x-2 mt-8">
+          <button
+              disabled={pageNo === 1}
+              onClick={() => setPageNo((prev) => Math.max(prev - 1, 1))}
+              className={`px-4 py-2 rounded-md ${
+                  pageNo === 1
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-gray-200 hover:bg-blue-500 hover:text-white"
+              }`}
+          >
+            Trước
+          </button>
+          {pages}
+          <button
+              disabled={pageNo === totalPageNo}
+              onClick={() => setPageNo((prev) => Math.min(prev + 1, totalPageNo))}
+              className={`px-4 py-2 rounded-md ${
+                  pageNo === totalPageNo
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-gray-200 hover:bg-blue-500 hover:text-white"
+              }`}
+          >
+            Tiếp
+          </button>
+        </div>
+    );
   };
 
   return (
-    <div className="py-10">
-      <div className="container mx-auto">
-        <h3 className="capitalize text-lg lg:text-2xl font-bold my-3">
-          {params.explore === "movie" ? "Phim Chiếu rạp" : "TV Shows"} phổ biến
-        </h3>
+      <div className="py-10">
+        <div className="container mx-auto">
+          <h3 className="capitalize text-lg lg:text-2xl font-bold my-3">
+            {params.explore === "movie" ? "Phim Lẻ" : "TV Shows"} phổ biến
+          </h3>
 
-        {/* Hiển thị dữ liệu */}
-        <div className="grid grid-cols-[repeat(auto-fit,230px)] gap-6 justify-center lg:justify-start">
-          {data.map((item) => (
-            <Card
-              data={item}
-              key={item.id + "exploreSection"}
-              // media_type={params.explore} Bo thu media type
-            />
-          ))}
-        </div>
-
-        {/* Hiển thị loading khi đang tải dữ liệu */}
-        {loading && (
-          <div className="flex justify-center mt-8">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
+          <div className="grid grid-cols-[repeat(auto-fit,230px)] gap-6 justify-center lg:justify-start">
+            {data.length > 0 ? (
+                data.map((item) => (
+                    <Card
+                        data={item}
+                        key={item.Id || item.Slug || Math.random()} // Key duy nhất
+                    />
+                ))
+            ) : loading ? (
+                <div className="text-center text-gray-500">Đang tải dữ liệu...</div>
+            ) : (
+                <div className="text-center text-gray-500">Không có dữ liệu để hiển thị</div>
+            )}
           </div>
-        )}
 
-        {/* Hiển thị phân trang */}
-        <div className="flex justify-center mt-8">
+          {loading && (
+              <div className="flex justify-center mt-8">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
+              </div>
+          )}
+
           {renderPagination()}
-        </div>
 
-        {/* Nếu không còn trang nào để load */}
-        {pageNo >= totalPageNo && !loading && (
-          <div className="text-center text-gray-500 mt-6">
-            Không còn dữ liệu để hiển thị.
-          </div>
-        )}
+          {pageNo >= totalPageNo && !loading && totalPageNo > 0 && (
+              <div className="text-center text-gray-500 mt-6">
+                Không còn dữ liệu để hiển thị.
+              </div>
+          )}
+        </div>
       </div>
-    </div>
   );
 };
 

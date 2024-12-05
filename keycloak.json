@@ -1,12 +1,13 @@
 {
-  "realm": "Javascript",
-  "url": "http://localhost:8080/",
-  "ssl-required": "external",
-  "client-id": "javascript-client",
+  "realm": "DukeMax",
+  "auth-server-url": "https://167.71.194.240:8443/",
+  "ssl-required": "none",
+  "resource": "DukeMax-Client",
   "verify-token-audience": true,
   "credentials": {
-    "secret": "diItEA84Iy4d556XFWLYDELc9FZfm9qZ"
+    "secret": "vQvwvgygZiQCTvxZIgHJeKdZFqzYDlqx"
   },
+  "use-resource-role-mappings": true,
   "confidential-port": 0,
   "policy-enforcer": {
     "credentials": {}
