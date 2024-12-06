@@ -13,13 +13,13 @@ const AdminLayout = () => {
 
     useEffect(() => {
         if (initialized && keycloak.authenticated) {
-            if (!KeycloakService.hasResourceRole([ROLES.ADMIN])) {
+            if (!KeycloakService.hasRealmRole([ROLES.ADMIN])) {
                 navigate('/');
             }
         }
     }, [keycloak, initialized, navigate]);
 
-    if (!initialized || !keycloak.authenticated || !KeycloakService.hasResourceRole([ROLES.ADMIN])) {
+    if (!initialized || !keycloak.authenticated || !KeycloakService.hasRealmRole([ROLES.ADMIN])) {
         navigate("/");
         return (
             <></>

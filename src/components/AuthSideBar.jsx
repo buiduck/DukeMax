@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { useKeycloak } from "@react-keycloak/web";
+import {useKeycloak} from "@react-keycloak/web";
 import KeycloakService from "./keycloak";
+import {useNavigate} from "react-router-dom";
+import {ROLES} from "../constants/roleConstants";
 
-const AuthSideBar = ({ isOpen, onClose }) => {
-    const { keycloak } = useKeycloak();
+const AuthSideBar = ({isOpen, onClose}) => {
+    const {keycloak} = useKeycloak();
+    const navigate = useNavigate();
 
     const handleOverlayClick = (e) => {
         if (e.target === e.currentTarget) {
@@ -61,6 +63,17 @@ const AuthSideBar = ({ isOpen, onClose }) => {
                                 >
                                     Info
                                 </button>
+                                {KeycloakService.hasRealmRole(ROLES.ADMIN) && (
+                                    <button
+                                        onClick={() => {
+                                            navigate("/admin/dashboard");
+                                        }}
+                                        className="w-full py-2 px-4 bg-green-500 text-white text-center rounded-lg shadow hover:bg-green-600"
+                                    >
+                                        Admin dashboard
+                                    </button>
+                                )}
+
 
                                 <button
                                     onClick={async () => {
@@ -68,7 +81,7 @@ const AuthSideBar = ({ isOpen, onClose }) => {
                                     }}
                                     className="w-full py-2 px-4 bg-red-500 text-white text-center rounded-lg shadow hover:bg-red-600"
                                 >
-                                    Đăng xuất
+                                Đăng xuất
                                 </button>
                             </>
                         )}
@@ -76,7 +89,8 @@ const AuthSideBar = ({ isOpen, onClose }) => {
                 </div>
             </div>
         </div>
-    );
+    )
+        ;
 };
 
 export default AuthSideBar;

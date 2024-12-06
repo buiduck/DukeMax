@@ -27,16 +27,13 @@ const updateToken = (successCallback) =>
 const getUsername = () => keycloak.tokenParsed?.preferred_username;
 
 
-const hasResourceRole = (roles) => {
+const hasRealmRole = (roles) => {
     const rolesArray = Array.isArray(roles) ? roles : [roles];
 
     if (process.env.REACT_APP_NODE_ENV === APP_MODE.DEVELOPMENT) {
         console.debug("Checking roles: ", rolesArray);
-
-        const access = keycloak.resourceAccess[keycloak.clientId];
-        console.debug("Role from user: " + access.roles);
     }
-    return rolesArray.every((role) => keycloak.hasResourceRole(role));
+    return rolesArray.every((role) => keycloak.hasRealmRole(role));
 };
 
 const KeycloakService = {
@@ -47,7 +44,7 @@ const KeycloakService = {
     getTokenParsed,
     updateToken,
     getUsername,
-    hasResourceRole,
+    hasRealmRole,
     keycloak,
 };
 
