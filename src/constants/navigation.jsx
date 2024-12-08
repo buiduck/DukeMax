@@ -1,30 +1,35 @@
-import {MdLocalMovies,MdLiveTv,MdHome,MdOutlineSearch,MdDescription} from "react-icons/md";
+import {MdLocalMovies,MdLiveTv,MdHome,MdOutlineSearch,MdDescription,MdFilterAlt} from "react-icons/md";
 export const navigation =[
     {
-        label:"Truyền hình tv",
+        label:"Truyền Hình Tv",
         href: 'tv',
         icon :<MdLiveTv/>
     },
     {
-        label:"Phim chiếu rạp",
+        label:"Phim Chiếu Rạp",
         href: 'movie',
         icon :<MdLocalMovies/>
     },
     {
-        label: "Tin tức",  // Thêm mục "Blog"
+        label: "Tin Tức",  
         href: 'blog',
-        icon: <MdDescription />  // Bạn có thể chọn icon phù hợp
+        icon: <MdDescription />  
+    },
+    {
+        label: "Lọc Phim",  
+        href: 'mutliselect',
+        icon: <MdFilterAlt />  
     }
 ]
  export const mobileNavigation = [
     {
-        label:'Trang trủ',
+        label:'Trang Trủ',
         href:'/',
         icon : <MdHome/>
     },
     ...navigation,
     {
-        label:"Tìm kiếm",
+        label:"Tìm Kiếm",
         href :'/search',
         icon :<MdOutlineSearch/>
     }

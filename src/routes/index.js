@@ -15,7 +15,9 @@ import AdminAddMovie from '../admin/movie/AdminAddMovie';
 import AdminEditMovie from '../admin/movie/AdminEditMovie'
 import BlogPage from '../pages/BlogPage';
 import AdminBlogList from '../admin/blog/AdminBlogList'
-
+import AdminBlogCreate from '../admin/blog/AdminBlogCreate'
+import AdminBlogEdit from '../admin/blog/AdminBlogEdit'
+import Multiselect from '../pages/Multiselect';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -44,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: 'blog',
         element: <BlogPage />
+      },
+      {
+        path: 'mutliselect',
+        element: <Multiselect/>
       }
     ]
   },
@@ -66,6 +72,14 @@ const router = createBrowserRouter([
       {       
         path: 'blog',
         element: <AdminBlogList />  
+      },
+      {
+        path:'blog/add-blog',
+        element :<AdminBlogCreate/>
+      },
+      {
+        path: 'blog/edit-blog/:id',
+        element: <AdminBlogEdit />  
       },
       {
         path: 'movies/add-movie',

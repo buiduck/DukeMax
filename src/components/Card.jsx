@@ -6,7 +6,7 @@ import KeycloakService from "./keycloak";
 const Card = ({data}) => {
     return (
         <Link
-            to={"/phim/" + data.Slug} //"/" + mediaType + ( bo thu mediatyupe)
+            to={"/phim/" + data.Slug} 
             className="w-full min-w-[230px] max-w-[230px] h-80 overflow-hidden block rounded relative hover:scale-105 transition-all"
         >
             {data?.PosterUrl ? (

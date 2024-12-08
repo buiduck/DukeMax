@@ -100,15 +100,14 @@ const SearchPage = () => {
     if (!query) return; // Nếu không có query thì không gọi API
 
     try {
-      const response = await axios.get("/api/movie/search", {
+      const response = await axios.get("/api/movie/search?query=", {
         params: {
           query: query, // Gửi từ khóa tìm kiếm
           limit: 20, // Giới hạn kết quả trả về mỗi lần
         },
       });
-
       if (response.data) {
-        setData(response.data.data || []); // Gán kết quả tìm kiếm
+        setData(response.data || []); // Gán kết quả tìm kiếm
       } else {
         console.log("No results found");
       }
