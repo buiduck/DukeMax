@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import KeycloakService from "../../components/keycloak";
 
 const AdminBlogCreate = () => {
   const navigate = useNavigate();
@@ -8,7 +12,7 @@ const AdminBlogCreate = () => {
     shortDescription: "",
     content: "",
     image: null,
-    imagePreview: null, // This will hold the preview URL for the image
+    imagePreview: null, // Dùng để hiển thị preview ảnh
   });
 
   const handleInputChange = (e) => {
@@ -21,53 +25,61 @@ const AdminBlogCreate = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    const imagePreview = URL.createObjectURL(file); // Create a temporary URL for the preview
+    const imagePreview = URL.createObjectURL(file);
 
     setFormData((prevData) => ({
       ...prevData,
       image: file,
-      imagePreview: imagePreview, // Set the preview URL
+      imagePreview: imagePreview,
     }));
   };
 
   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     const data = new FormData();
-//     data.append("title", formData.title);
-//     data.append("shortDescription", formData.shortDescription);
-//     data.append("content", formData.content);
-//     if (formData.image) {
-//       data.append("image", formData.image);
-//     }
+    e.preventDefault();
 
-//     try {
-//       // Replace with the appropriate API endpoint
-//       const response = await fetch("/api/blogs", {
-//         method: "POST",
-//         body: data,
-//         headers: {
-//           Authorization: `Bearer ${localStorage.getItem("token")}`, // Token from localStorage
-//         },
-//       });
+    try {
+      const data = new FormData();
+      data.append("Title", formData.title);
+      data.append("ShortDescription", formData.shortDescription);
+      data.append("Content", formData.content);
+      if (formData.image) {
+        data.append("Image", formData.image);
+      }
 
-//       if (response.ok) {
-//         alert("Tạo bài viết thành công!");
-//         navigate("/admin/blog");
-//       } else {
-//         alert("Có lỗi xảy ra, vui lòng thử lại.");
-//       }
-//     } catch (error) {
-//       console.error("Error creating blog:", error);
-//       alert("Có lỗi xảy ra, vui lòng thử lại.");
-//     }
+      const token = KeycloakService.getToken();
+      const response = await axios.post("/api/blog", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`, // Thay thế bằng token thật từ KeycloakService
+        },
+      });
+
+      if (response.data && response.data.status === 200) {
+        alert(response.data.message || "Tạo bài viết thành công!");
+        navigate("/admin/blog");
+      } else {
+        alert(response.data?.message || "Có lỗi xảy ra, vui lòng thử lại.");
+      }
+    } catch (error) {
+      console.error("Error creating blog:", error);
+      alert("Có lỗi xảy ra, vui lòng thử lại.");
+    }
   };
 
   return (
     <div className="container mx-auto p-8">
-      <h1 className="text-4xl font-semibold text-gray-800 mb-8">Thêm Bài Viết</h1>
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg">
+      <h1 className="text-4xl font-semibold text-gray-800 mb-8">
+        Thêm Bài Viết
+      </h1>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 rounded-lg shadow-lg"
+      >
         <div className="mb-6">
-          <label htmlFor="title" className="block text-lg font-medium text-gray-700">
+          <label
+            htmlFor="title"
+            className="block text-lg font-medium text-gray-700"
+          >
             Tiêu đề
           </label>
           <input
@@ -81,7 +93,10 @@ const AdminBlogCreate = () => {
           />
         </div>
         <div className="mb-6">
-          <label htmlFor="shortDescription" className="block text-lg font-medium text-gray-700">
+          <label
+            htmlFor="shortDescription"
+            className="block text-lg font-medium text-gray-700"
+          >
             Mô tả ngắn
           </label>
           <textarea
@@ -95,22 +110,31 @@ const AdminBlogCreate = () => {
           />
         </div>
         <div className="mb-6">
-          <label htmlFor="content" className="block text-lg font-medium text-gray-700">
+          <label
+            htmlFor="content"
+            className="block text-lg font-medium text-gray-700"
+          >
             Nội dung
           </label>
-          <textarea
-            id="content"
-            name="content"
+
+          <ReactQuill
+            theme="snow"
             value={formData.content}
-            onChange={handleInputChange}
-            rows="6"
-            className="mt-2 p-3 text-slate-700 border rounded-lg w-full"
-            required
+            className="h-52 text-slate-700"
+            onChange={(value) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                content: value,
+              }))
+            }
           />
         </div>
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center">
-            <label htmlFor="image" className="block text-lg font-medium text-gray-700 mr-4">
+        <div className="mb-6 pt-10 flex items-center justify-between">
+          <div className="flex mt-6 items-center">
+            <label
+              htmlFor="image"
+              className="block text-lg font-medium text-gray-700 mr-4"
+            >
               Ảnh
             </label>
             <input
@@ -124,11 +148,11 @@ const AdminBlogCreate = () => {
           </div>
 
           {formData.imagePreview && (
-            <div >
+            <div>
               <img
                 src={formData.imagePreview}
                 alt="Image Preview"
-                className="w-20 h-20 object-cover rounded-lg" 
+                className="w-32 h-32 object-cover rounded-lg"
               />
             </div>
           )}

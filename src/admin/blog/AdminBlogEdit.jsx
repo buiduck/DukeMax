@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import KeycloakService from "../../components/keycloak";
+import axios from "axios";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const AdminBlogEdit = () => {
   const navigate = useNavigate();
-  const { id } = useParams(); // Lấy id từ URL
+  const { id } = useParams();
   const [formData, setFormData] = useState({
     title: "",
     shortDescription: "",
@@ -12,26 +16,28 @@ const AdminBlogEdit = () => {
     imagePreview: null,
   });
 
-  // Fetch dữ liệu bài viết khi trang được load
   useEffect(() => {
+    console.log('Blog ID:', id);
     const fetchBlogData = async () => {
       try {
-        const response = await fetch(`/api/blogs/${id}`);
-        if (response.ok) {
-          const data = await response.json();
-          setFormData({
-            title: data.title,
-            shortDescription: data.shortDescription,
-            content: data.content,
-            image: data.image, // Assuming the API returns the image path or URL
-            imagePreview: data.imagePreview, // For displaying the current image preview
-          });
-        } else {
-          alert("Không tìm thấy bài viết.");
-        }
+        const token = KeycloakService.getToken();
+        const response = await axios.get(`/api/blog/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = response.data;
+        setFormData({
+          title: data.title,
+          shortDescription: data.shortDescription,
+          content: data.content,
+          image: null,
+          imagePreview: data.image,
+        });
       } catch (error) {
         console.error("Error fetching blog data:", error);
-        alert("Có lỗi xảy ra, vui lòng thử lại.");
+        alert("Không thể tải bài viết.");
       }
     };
 
@@ -58,43 +64,46 @@ const AdminBlogEdit = () => {
   };
 
   const handleSubmit = async (e) => {
-    // e.preventDefault();
-    // const data = new FormData();
-    // data.append("title", formData.title);
-    // data.append("shortDescription", formData.shortDescription);
-    // data.append("content", formData.content);
-    // if (formData.image) {
-    //   data.append("image", formData.image);
-    // }
+    e.preventDefault();
+    const data = new FormData();
+    data.append("title", formData.title);
+    data.append("shortDescription", formData.shortDescription);
+    data.append("content", formData.content);
+    if (formData.image) {
+      data.append("image", formData.image);
+    }
 
-    // try {
-    //   // Gửi yêu cầu cập nhật bài viết
-    //   const response = await fetch(`/api/blogs/${id}`, {
-    //     method: "PUT",
-    //     body: data,
-    //     headers: {
-    //       Authorization: `Bearer ${localStorage.getItem("token")}`, // Token từ localStorage
-    //     },
-    //   });
+    try {
+      const token = KeycloakService.getToken();
+      await axios.put(`/api/blog/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-    //   if (response.ok) {
-    //     alert("Cập nhật bài viết thành công!");
-    //     navigate("/admin/blog"); // Điều hướng về trang danh sách blog
-    //   } else {
-    //     alert("Có lỗi xảy ra, vui lòng thử lại.");
-    //   }
-    // } catch (error) {
-    //   console.error("Error updating blog:", error);
-    //   alert("Có lỗi xảy ra, vui lòng thử lại.");
-    // }
+      alert("Cập nhật bài viết thành công!");
+      navigate("/admin/blog");
+    } catch (error) {
+      console.error("Error updating blog:", error);
+      alert("Có lỗi xảy ra, vui lòng thử lại.");
+    }
   };
 
   return (
     <div className="container mx-auto p-8">
-      <h1 className="text-4xl font-semibold text-gray-800 mb-8">Chỉnh Sửa Bài Viết</h1>
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg">
+      <h1 className="text-4xl font-semibold text-gray-800 mb-8">
+        Chỉnh Sửa Bài Viết
+      </h1>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 rounded-lg shadow-lg"
+      >
         <div className="mb-6">
-          <label htmlFor="title" className="block text-lg font-medium text-gray-700">
+          <label
+            htmlFor="title"
+            className="block text-lg font-medium text-gray-700"
+          >
             Tiêu đề
           </label>
           <input
@@ -108,7 +117,10 @@ const AdminBlogEdit = () => {
           />
         </div>
         <div className="mb-6">
-          <label htmlFor="shortDescription" className="block text-lg font-medium text-gray-700">
+          <label
+            htmlFor="shortDescription"
+            className="block text-lg font-medium text-gray-700"
+          >
             Mô tả ngắn
           </label>
           <textarea
@@ -122,22 +134,30 @@ const AdminBlogEdit = () => {
           />
         </div>
         <div className="mb-6">
-          <label htmlFor="content" className="block text-lg font-medium text-gray-700">
+          <label
+            htmlFor="content"
+            className="block text-lg font-medium text-gray-700"
+          >
             Nội dung
           </label>
-          <textarea
-            id="content"
-            name="content"
+          <ReactQuill
+            theme="snow"
             value={formData.content}
-            onChange={handleInputChange}
-            rows="6"
-            className="mt-2 p-3 text-slate-700 border rounded-lg w-full"
-            required
+            className="h-52 text-slate-700"
+            onChange={(value) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                content: value,
+              }))
+            }
           />
         </div>
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center">
-            <label htmlFor="image" className="block text-lg font-medium text-gray-700 mr-4">
+        <div className="mb-6 pt-10 flex items-center justify-between">
+          <div className="flex mt-6 items-center">
+            <label
+              htmlFor="image"
+              className="block text-lg font-medium text-gray-700 mr-4"
+            >
               Ảnh
             </label>
             <input
@@ -151,11 +171,11 @@ const AdminBlogEdit = () => {
           </div>
 
           {formData.imagePreview && (
-            <div className="ml-4">
+            <div>
               <img
                 src={formData.imagePreview}
                 alt="Image Preview"
-                className="w-16 h-16 object-cover rounded-lg" // Resize to 64px x 64px with object-cover
+                className="w-32 h-32 object-cover rounded-lg"
               />
             </div>
           )}

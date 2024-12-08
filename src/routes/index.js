@@ -14,6 +14,7 @@ import AdminEditUser from '../admin/user/AdminEditUser';
 import AdminAddMovie from '../admin/movie/AdminAddMovie';
 import AdminEditMovie from '../admin/movie/AdminEditMovie'
 import BlogPage from '../pages/BlogPage';
+import DetailsBlog from '../pages/DetailsBlog';
 import AdminBlogList from '../admin/blog/AdminBlogList'
 import AdminBlogCreate from '../admin/blog/AdminBlogCreate'
 import AdminBlogEdit from '../admin/blog/AdminBlogEdit'
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: 'blog',
         element: <BlogPage />
+      },
+      {
+        path: 'blog/:id',
+        element: <DetailsBlog />
       },
       {
         path: 'mutliselect',

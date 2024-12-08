@@ -1,24 +1,66 @@
-// src/admin/blog/AdminBlogList.jsx
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { MdEdit, MdDelete } from 'react-icons/md'; // Import icon từ react-icons
-
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { MdEdit, MdDelete } from "react-icons/md";
+import axios from "axios";
+import KeycloakService from "../../components/keycloak";
 const AdminBlogList = () => {
-  const blogs = [
-    { id: 1, title: 'Bài viết 1', description: 'Mô tả ngắn về bài viết 1' },
-    { id: 2, title: 'Bài viết 2', description: 'Mô tả ngắn về bài viết 2' },
-    { id: 3, title: 'Bài viết 3', description: 'Mô tả ngắn về bài viết 3' }
-  ];
+  const [blogs, setBlogs] = useState([]);
 
-  const handleDelete = (id) => {
-    // Xử lý xóa bài viết tại đây
-    console.log(`Xóa bài viết với ID: ${id}`);
+  // Fetch list of blogs from API
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await axios.get("/api/blog?page=1"); // Replace with your API endpoint
+        if (response.status === 200) {
+          const blogsData = response.data.data.pageData.map((blog) => ({
+            id: blog.Id,
+            title: blog.Title,
+            shortDescription: blog.ShortDescription,
+            slug: blog.Slug,
+            content: blog.Content,
+            image: blog.Image,
+            writeBy: blog.WriteBy,
+          }));
+          setBlogs(blogsData);
+        } else {
+          console.error("Failed to fetch blogs");
+        }
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  // Handle delete functionality with authorization
+  const handleDelete = async (id) => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa bài viết này không?")) {
+      try {
+        const token = KeycloakService.getToken();
+        const response = await axios.delete(`/api/blog/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Attach the token in Authorization header
+          },
+        });
+
+        if (response.status === 200) {
+          setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== id));
+          alert("Xóa bài viết thành công!");
+        } else {
+          alert(response.data?.message || "Có lỗi xảy ra, không thể xóa bài viết.");
+        }
+      } catch (error) {
+        console.error("Error deleting blog:", error);
+        alert("Có lỗi xảy ra, không thể xóa bài viết.");
+      }
+    }
   };
 
   return (
     <div className="container mx-auto p-8">
       <h1 className="text-4xl font-semibold text-gray-800 mb-8">Danh Sách Tin Tức</h1>
-      
+
       <div className="mb-6">
         <Link
           to="/admin/blog/add-blog"
@@ -40,7 +82,7 @@ const AdminBlogList = () => {
           {blogs.map((blog) => (
             <tr key={blog.id} className="hover:bg-gray-100">
               <td className="px-6 py-4 border-b text-lg text-gray-700">{blog.title}</td>
-              <td className="px-6 py-4 border-b text-lg text-gray-700">{blog.description}</td>
+              <td className="px-6 py-4 border-b text-lg text-gray-700">{blog.shortDescription}</td>
               <td className="px-6 py-4 border-b text-lg">
                 <Link
                   to={`/admin/blog/edit-blog/${blog.id}`}
