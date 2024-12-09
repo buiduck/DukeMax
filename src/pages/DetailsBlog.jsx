@@ -42,7 +42,7 @@ const DetailsBlog = () => {
                 className="w-full h-96 object-cover rounded-lg shadow-lg mb-8"
             />
             <div
-                className="text-gray-600 text-lg leading-8"
+                className="text-gray-200 text-lg leading-8"
                 dangerouslySetInnerHTML={{__html: blog.Content}}
             ></div>
         </div>

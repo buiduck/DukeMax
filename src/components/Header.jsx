@@ -8,21 +8,27 @@ import AuthSideBar from "./AuthSideBar";
 
 const Header = () => {
     const location = useLocation();
-    const queryParam = new URLSearchParams(location.search).get("q") || ""; // Lấy từ query string
-    const [searchInput, setSearchInput] = useState(queryParam);
+    const queryParam = new URLSearchParams(location.search).get("q") || ""; // Lấy query string
+    const [searchInput, setSearchInput] = useState(queryParam); // Trạng thái search
+    const [debouncedInput, setDebouncedInput] = useState(queryParam); // Debounce
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (searchInput.trim()) {
-            navigate(`/search?q=${searchInput}`); // Điều hướng khi nhập từ khóa
-        }
-    };
-
+    // Debounce logic: Cập nhật giá trị debounce sau 1 giây
     useEffect(() => {
-        setSearchInput(queryParam); // Cập nhật lại input khi query thay đổi
-    }, [queryParam]);
+        const handler = setTimeout(() => {
+            setDebouncedInput(searchInput);
+        }, 1000);
+
+        return () => clearTimeout(handler);
+    }, [searchInput]);
+
+    // Điều hướng URL khi debounce thay đổi
+    useEffect(() => {
+        if (debouncedInput.trim() || debouncedInput === "") {
+            navigate(`/search?q=${debouncedInput}`);
+        }
+    }, [debouncedInput, navigate]);
 
     return (
         <header className="fixed flex top-0 w-full h-16 bg-slate-500 bg-opacity-40 z-40">
@@ -43,7 +49,10 @@ const Header = () => {
                 </nav>
                 <div className="ml-auto flex gap-6">
                     {/* Thanh tìm kiếm */}
-                    <form className="flex items-center gap-2" onSubmit={handleSubmit}>
+                    <form
+                        className="flex items-center gap-2"
+                        onSubmit={(e) => e.preventDefault()}
+                    >
                         <input
                             type="text"
                             placeholder="Tìm kiếm phim ở đây..."

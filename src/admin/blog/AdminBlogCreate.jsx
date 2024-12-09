@@ -36,7 +36,6 @@ const AdminBlogCreate = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const data = new FormData();
       data.append("Title", formData.title);

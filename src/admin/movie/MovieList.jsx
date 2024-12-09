@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import {MdAddCircle, MdDelete, MdEdit, MdOutlineSearch} from 'react-icons/md'; // Sử dụng các icon từ react-icons/md
 import {Link} from 'react-router-dom';
-import axios from "axios"; // Import Link for routing
+import axios from "axios"; 
 
 const MovieList = () => {
         const [searchTerm, setSearchTerm] = useState('');

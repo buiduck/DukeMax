@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Select from "react-select"; // Import react-select
+import Card from "../components/Card"; // Import Card component
 
 const MovieFilter = () => {
   // States lưu trữ dữ liệu từ các API
@@ -11,18 +12,28 @@ const MovieFilter = () => {
   const [selectedCategories, setSelectedCategories] = useState([]); // Chỉnh sửa để hỗ trợ nhiều thể loại
   const [selectedCountries, setSelectedCountries] = useState([]);
 
+  // State để lưu danh sách phim
+  const [movies, setMovies] = useState([]);
+
   const searchMoviesFromApi = async () => {
     const query = {
       CategoryIds: selectedCategories.map((category) => category.value).join(","),
       CountryIds: selectedCountries.map((country) => country.value).join(","),
     };
 
-    // Gửi yêu cầu với axios
-    const { data } = await axios.get("/api/movie/search-multi-features", {
-      params: query,
-    });
-    console.log(data);
+    try {
+      // Gửi yêu cầu với axios
+      const { data } = await axios.get("/api/movie/search-multi-features", {
+        params: query,
+      });
+
+      console.log(data); // Kiểm tra dữ liệu
+      setMovies(data.data); // Cập nhật danh sách phim
+    } catch (err) {
+      console.error("Có lỗi khi tìm kiếm phim:", err);
+    }
   };
+
   // Lấy dữ liệu từ các endpoint
   useEffect(() => {
     const fetchFilters = async () => {
@@ -96,14 +107,8 @@ const MovieFilter = () => {
             getOptionLabel={(e) => e.label} // Hiển thị label của option
             getOptionValue={(e) => e.value} // Dùng value là tên thể loại
             className="p-2 border w-[50vh] rounded text-xl text-slate-700"
-          >
-            <option value="">Chọn quốc gia</option>
-            {countries.map((country) => (
-              <option key={country.Id} value={country.Name}>
-                {country.Name}
-              </option>
-            ))}
-          </Select>
+            placeholder="Chọn quốc gia"
+          />
         </div>
 
         <div className="mt-7">
@@ -116,60 +121,15 @@ const MovieFilter = () => {
         </div>
       </div>
 
-      {/* Hiển thị dữ liệu từ 2 endpoint */}
-      <div>
-        <h2 className="text-2xl font-semibold mb-4">Dữ liệu lọc</h2>
-        <div className="space-y-2">
-          <h3 className="text-xl mb-2">Thể loại đã chọn: </h3>
-          <div className="flex flex-wrap gap-2">
-            {selectedCategories.map((category) => (
-              <span
-                key={category.value}
-                className="inline-block bg-blue-500 text-white py-1 px-3 rounded-full flex items-center"
-              >
-                {category.label}
-                <button
-                  type="button"
-                  className="ml-2 text-white"
-                  onClick={() =>
-                    setSelectedCategories(
-                      selectedCategories.filter(
-                        (item) => item.value !== category.value
-                      )
-                    )
-                  }
-                >
-                  <span className="text-lg">&times;</span>
-                </button>
-              </span>
-            ))}
-          </div>
-
-          <h3 className="text-xl mb-2">Quốc gia đã chọn: </h3>
-          <div className="flex flex-wrap gap-2">
-            {selectedCountries.map((country) => (
-              <span
-                key={country.value}
-                className="inline-block bg-blue-500 text-white py-1 px-3 rounded-full flex items-center"
-              >
-                {country.label}
-                <button
-                  type="button"
-                  className="ml-2 text-white"
-                  onClick={() =>
-                    setSelectedCountries(
-                      selectedCountries.filter(
-                        (item) => item.value !== country.value
-                      )
-                    )
-                  }
-                >
-                  <span className="text-lg">&times;</span>
-                </button>
-              </span>
-            ))}
-          </div>
-        </div>
+      {/* Hiển thị danh sách phim */}
+      <div className="grid grid-cols-[repeat(auto-fit,230px)] gap-6 justify-center lg:justify-start">
+        {movies.length > 0 ? (
+          movies.map((movie) => <Card key={movie.Id || movie.Slug  } data={movie} />)
+        ) : (
+          <p className="text-center text-xl text-gray-500">
+            Không tìm thấy phim nào.
+          </p>
+        )}
       </div>
     </div>
   );
