@@ -27,13 +27,15 @@ const AdminBlogEdit = () => {
           },
         });
 
-        const data = response.data;
+        const blogData = response.data.data;
+
+
         setFormData({
-          title: data.title,
-          shortDescription: data.shortDescription,
-          content: data.content,
+          title: blogData.Title,
+          shortDescription: blogData.ShortDescription,
+          content: blogData.Content,
           image: null,
-          imagePreview: data.image,
+          imagePreview: new URL(blogData.Image,process.env.REACT_APP_API_URL).href,
         });
       } catch (error) {
         console.error("Error fetching blog data:", error);
@@ -66,16 +68,17 @@ const AdminBlogEdit = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
-    data.append("title", formData.title);
-    data.append("shortDescription", formData.shortDescription);
-    data.append("content", formData.content);
+    data.append("Id", id);
+    data.append("Title", formData.title);
+    data.append("ShortDescription", formData.shortDescription);
+    data.append("Content", formData.content);
     if (formData.image) {
-      data.append("image", formData.image);
+      data.append("Image", formData.image);
     }
 
     try {
       const token = KeycloakService.getToken();
-      await axios.put(`/api/blog/${id}`, data, {
+      await axios.put(`/api/blog/`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",

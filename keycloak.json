@@ -1,15 +1,8 @@
 {
   "realm": "DukeMax",
-  "auth-server-url": "https://167.71.194.240:8443/",
+  "auth-server-url": "http://167.71.194.240:8080/",
   "ssl-required": "none",
-  "resource": "DukeMax-Client",
-  "verify-token-audience": true,
-  "credentials": {
-    "secret": "vQvwvgygZiQCTvxZIgHJeKdZFqzYDlqx"
-  },
-  "use-resource-role-mappings": true,
-  "confidential-port": 0,
-  "policy-enforcer": {
-    "credentials": {}
-  }
+  "resource": "DukeMax-ReactJS",
+  "public-client": true,
+  "confidential-port": 0
 }
