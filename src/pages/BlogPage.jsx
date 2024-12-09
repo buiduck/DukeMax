@@ -34,7 +34,7 @@ const BlogPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {blogs.map((blog) => (
             <div key={blog.Id} className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <img src={`${process.env.PUBLIC_URL}/${blog.Image}`} alt={blog.Title} className="w-full h-48 object-cover" />
+              <img src={new URL(blog.Image,process.env.REACT_APP_API_URL).href} alt={blog.Title} className="w-full h-48 object-cover" />
               <div className="p-5">
                 <h2 className="text-2xl font-semibold text-gray-800">{blog.Title}</h2>
                 <p className="text-slate-700 mt-2">{blog.ShortDescription}</p>
