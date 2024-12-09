@@ -56,7 +56,7 @@ const AuthSideBar = ({isOpen, onClose}) => {
                             <>
                                 <button
                                     onClick={async () => {
-                                        const accountUrl = `${keycloak.authServerUrl}/realms/${keycloak.realm}/account`;
+                                        const accountUrl = new URL(`/realms/${keycloak.realm}/account`, keycloak.authServerUrl).href;
                                         window.location.href = accountUrl;
                                     }}
                                     className="w-full py-2 px-4 bg-green-500 text-white text-center rounded-lg shadow hover:bg-green-600"

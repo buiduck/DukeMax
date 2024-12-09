@@ -1,16 +1,27 @@
 import React, { useState, useEffect } from 'react';
+import axios from "axios";
+import KeycloakService from "../../components/keycloak";
+import {useParams} from "react-router-dom";
 
-const AdminEditMovie = ({ movieId }) => {
+const AdminEditMovie = () => {
+
+  const { id } = useParams(); // Lấy tham số id từ URL
+
   const [movie, setMovie] = useState({ title: '', genre: '', releaseDate: '' });
 
   useEffect(() => {
-    // Fetch movie data based on movieId (mocked for now)
     const fetchMovie = async () => {
-      const mockData = { title: 'Inception', genre: 'Sci-Fi', releaseDate: '2010-07-16' };
-      setMovie(mockData);
+
+      const movieDetail = (await axios.get(`api/movie/${id}`,{
+        headers: {
+          Authorization: `Bearer ${KeycloakService.getToken()}`,
+        },
+      })).data;
+      console.log(movieDetail);
+      setMovie(movieDetail);
     };
     fetchMovie();
-  }, [movieId]);
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,7 +43,7 @@ const AdminEditMovie = ({ movieId }) => {
             type="text"
             id="title"
             name="title"
-            value={movie.title}
+            value={movie.Name}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300 focus:outline-none"
           />
@@ -43,7 +54,7 @@ const AdminEditMovie = ({ movieId }) => {
             type="text"
             id="genre"
             name="genre"
-            value={movie.genre}
+            value={movie.Genre}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300 focus:outline-none"
           />
@@ -54,7 +65,7 @@ const AdminEditMovie = ({ movieId }) => {
             type="date"
             id="releaseDate"
             name="releaseDate"
-            value={movie.releaseDate}
+            value={movie.ReleaseDate}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300 focus:outline-none"
           />
