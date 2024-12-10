@@ -11,7 +11,7 @@ const MovieList = () => {
         useEffect(() => {
             const fetchMovies = async () => {
                 try {
-                    const response = await axios.get('api/movie/filter', {
+                    const response = await axios.get('api/movie', {
                         params: {
                             pageNumber: 1,
                             pageSize: 10,
