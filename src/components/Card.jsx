@@ -4,13 +4,22 @@ import { Link } from 'react-router-dom';
 import KeycloakService from "./keycloak";
 
 const Card = ({data}) => {
+
+    const getUrl = (url) => {
+        if (url?.startsWith('http')) {
+            return url;
+        } else {
+            const newUrl = new URL(url, process.env.REACT_APP_API_URL);
+            return newUrl.href; 
+        }
+    };
     return (
         <Link
             to={"/phim/" + data.Slug} 
             className="w-full min-w-[230px] max-w-[230px] h-80 overflow-hidden block rounded relative hover:scale-105 transition-all"
         >
             {data?.PosterUrl ? (
-                <img src={data.PosterUrl} alt={data?.Name} />
+                <img src={getUrl(data?.PosterUrl)} alt={data?.Name} />
             ) : (
                 <div className="bg-neutral-800 h-full w-full flex justify-center items-center">
                     No image found

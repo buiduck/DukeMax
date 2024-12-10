@@ -8,9 +8,6 @@ import WatchMovie from '../pages/WatchMovie';
 import AdminLayout from '../admin/AdminLayout';
 import AdminDashboard from '../admin/AdminDashboard';
 import MovieList from '../admin/movie/MovieList';
-import AdminUserList from '../admin/user/AdminUserList';
-import AdminAddUser from '../admin/user/AdminAddUser';
-import AdminEditUser from '../admin/user/AdminEditUser';
 import AdminAddMovie from '../admin/movie/AdminAddMovie';
 import AdminEditMovie from '../admin/movie/AdminEditMovie'
 import BlogPage from '../pages/BlogPage';
@@ -70,10 +67,6 @@ const router = createBrowserRouter([
         path: 'movies',
         element: <MovieList />
       },
-      {
-        path: 'users',
-        element: <AdminUserList />
-      },
       {       
         path: 'blog',
         element: <AdminBlogList />  
@@ -91,16 +84,8 @@ const router = createBrowserRouter([
         element: <AdminAddMovie />  
       },
       {
-        path: 'movies/edit-movie/:id',
+        path: 'movies/edit-movie/:movieId',
         element: <AdminEditMovie />  
-      },
-      {
-        path: 'users/add-user',
-        element: <AdminAddUser/>  
-      },
-      {
-        path: 'users/edit-user/:id',
-        element: <AdminEditUser />  
       },
     ]
   }

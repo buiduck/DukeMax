@@ -3,8 +3,10 @@ import Select from "react-select";
 import axios from "axios";
 import {v4} from "uuid";
 import KeycloakService from "../../components/keycloak";
+import { useNavigate } from "react-router-dom";
 
 const AdminAddMovie = () => {
+        const navigate = useNavigate();
         const [movie, setMovie] = useState({
             content:'',
             status: "",
@@ -115,16 +117,25 @@ const AdminAddMovie = () => {
                 streamDataIndex++;
             });
 
-            console.log('form data:',formData);
-            const response = await axios.post("/api/movie", formData, {
-                headers:{
-                    Authorization: `Bearer ${KeycloakService.getToken()}`,
-                }
-            })
-            console.log(response.data);
+            try {
+                const response = await axios.post("/api/movie", formData, {
+                    headers: {
+                        Authorization: `Bearer ${KeycloakService.getToken()}`,
+                    },
+                });
+                console.log(response.data);
+
+                setSuccessMessage("Thêm thành công");
+                setTimeout(() => {
+                    setSuccessMessage('');
+                }, 5000); 
+            } catch (error) {
+                console.error("Error adding movie:", error);
+
+            }
         };
 
-
+        const [successMessage, setSuccessMessage] = useState('');
         const [actors, setActors] = useState([]);
         const [countries, setCountries] = useState([]);
         const [directors, setDirectors] = useState([]);
@@ -273,8 +284,14 @@ const AdminAddMovie = () => {
         const removeEpisode = (id) => {
             setEpisodes(episodes.filter((episode) => episode.Id !== id));
         };
+
         return (
             <div className="container mx-auto p-4">
+                {successMessage && (
+                        <div className="bg-green-500 text-white p-4 rounded-lg mb-4">
+                            {successMessage}
+                        </div>
+                )}
                 <h1 className="text-2xl  text-slate-800 font-bold mb-4">Add Movie</h1>
                 <form onSubmit={handleSubmit}>
                     <div className="grid grid-cols-2 gap-4">
@@ -331,6 +348,7 @@ const AdminAddMovie = () => {
                                 id="name"
                                 name="name"
                                 value={movie.name}
+                                required
                                 onChange={handleChange}
                                 className="w-full p-2 border  text-gray-700 border-gray-300 rounded-lg focus:ring focus:ring-blue-300 focus:outline-none"
                                 placeholder="Enter movie name"
@@ -344,6 +362,7 @@ const AdminAddMovie = () => {
                                 id="originName"
                                 name="originName"
                                 value={movie.originName}
+                                required
                                 onChange={handleChange}
                                 className="w-full p-2 border text-gray-700 border-gray-300 rounded-lg focus:ring focus:ring-blue-300 focus:outline-none"
                                 placeholder="Enter origin name"
@@ -352,13 +371,14 @@ const AdminAddMovie = () => {
 
                         {/*Content*/}
                         <div className="col-span-2">
-                            <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">Origin
-                                Name</label>
+                            <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">Content
+                                </label>
                             <textarea
                                 id="content"
                                 name="content"
                                 value={movie.content}
                                 onChange={handleChange}
+                                required
                                 className="w-full p-2 border text-gray-700 border-gray-300 rounded-lg focus:ring focus:ring-blue-300 focus:outline-none"
                                 placeholder="Enter content"
                             />
@@ -389,6 +409,7 @@ const AdminAddMovie = () => {
                                 id="poster"
                                 name="poster"
                                 onChange={handleFileChange}
+                                required
                                 className="w-full p-2 border text-gray-700 border-gray-300 rounded-lg"
                             />
                         </div>
@@ -400,6 +421,7 @@ const AdminAddMovie = () => {
                                 id="thumb"
                                 name="thumb"
                                 onChange={handleFileChange}
+                                required
                                 className="w-full p-2 border text-gray-700 border-gray-300 rounded-lg"
                             />
                         </div>
@@ -619,7 +641,7 @@ const AdminAddMovie = () => {
                             {episodes.map((episode) => (
                                 <div
                                     key={episode.Id}
-                                    className="border p-4 rounded-lg mb-4 bg-gray-100 flex flex-col gap-4"
+                                    className="border p-4  rounded-lg mb-4 bg-gray-100 flex flex-col-2 gap-4"
                                 >
                                     {/* Tên Tập */}
                                     <div className="flex flex-col">
@@ -633,7 +655,7 @@ const AdminAddMovie = () => {
                                             onChange={(e) =>
                                                 updateEpisode(episode.Id, 'Name', e.target.value)
                                             }
-                                            className="w-full p-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300 focus:outline-none"
+                                            className="w-9/12 p-2 border text-slate-700 border-gray-300 rounded-lg focus:ring focus:ring-blue-300 focus:outline-none"
                                         />
                                     </div>
 
@@ -649,7 +671,7 @@ const AdminAddMovie = () => {
                                             onChange={(e) =>
                                                 updateEpisode(episode.Id, 'LinkEmbed', e.target.value)
                                             }
-                                            className="w-full p-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300 focus:outline-none"
+                                            className="w-full p-2 border text-slate-700 border-gray-300 rounded-lg focus:ring focus:ring-blue-300 focus:outline-none"
                                         />
                                     </div>
 
@@ -665,7 +687,7 @@ const AdminAddMovie = () => {
                                             onChange={(e) =>
                                                 updateEpisode(episode.Id, 'LinkM3u8', e.target.value)
                                             }
-                                            className="w-full p-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300 focus:outline-none"
+                                            className="w-full p-2 border text-slate-700 border-gray-300 rounded-lg focus:ring focus:ring-blue-300 focus:outline-none"
                                         />
                                     </div>
 
@@ -679,7 +701,7 @@ const AdminAddMovie = () => {
                                             onChange={(e) =>
                                                 updateEpisode(episode.Id, 'ServerId', e.target.value)
                                             }
-                                            className="w-full p-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300 focus:outline-none"
+                                            className="w-11/12 p-2 border text-slate-700 border-gray-300 rounded-lg focus:ring focus:ring-blue-300 focus:outline-none"
                                         >
                                             {servers.map((server) => (
                                                 <option key={server.value} value={server.value}>
@@ -701,12 +723,20 @@ const AdminAddMovie = () => {
                         </div>
                     </div>
                     {/* Submit Button */}
-                    <button
-                        type="submit"
-                        className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 focus:outline-none mt-4"
-                    >
-                        Add Movie
-                    </button>
+                    <div className="flex justify-end"></div>
+                        <button
+                            type="button"
+                            onClick={() => navigate("/admin/blog")}
+                            className="px-6 py-3 bg-gray-400 text-white rounded-lg mr-4 hover:bg-gray-500"
+                        > Hủy
+                        </button>
+                        <button
+                            type="submit"
+                            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                        >
+                            Add Movie
+                        </button>
+                    <div/>
                 </form>
             </div>
         );

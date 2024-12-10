@@ -27,7 +27,7 @@ const DetailsPage = () => {
             try {
                 const detailResponse = await axios.get(`/api/movie/detail/${slug}`);
                 setData(detailResponse.data);
-                console.log(data)
+                console.log('helloas',data)
 
                 const randomMoviePage = getRandomPage();
                 const randomSeriesPage = getRandomPage();
@@ -48,6 +48,14 @@ const DetailsPage = () => {
         fetchData();
     }, [slug]);
 
+    const getUrl = (url) => {
+        if (url?.startsWith('http')) {
+            return url;
+        } else {
+            const newUrl = new URL(url, process.env.REACT_APP_API_URL);
+            return newUrl.href; 
+        }
+    };
     const handlePlayVideo = (data) =>{
         setPlayVideoId(data)
         setPlayVideo(true)
@@ -58,13 +66,13 @@ const DetailsPage = () => {
     return <div>
         <div className='w-full h-[380px] relative hidden lg:block'>
             <div className='w-full h-full '>
-                <img src={data?.ThumbUrl} className='h-full w-full object-cover'/>
+                <img src={getUrl(data?.ThumbUrl)} className='h-full w-full object-cover'/>
             </div>
             <div className='absolute w-full h-full top-0 bg-gradient-to-t from-neutral-900/90 to-transparent'></div>
         </div>
         <div className="container mx-auto px-3 py-13 lg:py-0 flex flex-col lg:flex-row gap-5 lg:gap-10">
             <div className="relative mx-auto lg:-mt-28 lg:mx-0 w-fit min-w-60">
-                <img src={data?.PosterUrl} className='h-80 w-60 object-cover rounded'/>
+                <img src={getUrl(data?.PosterUrl)} className='h-80 w-60 object-cover rounded'/>
                 <div className="flex space-x-5 mt-3  ">
                     <button
                         onClick={() => handlePlayVideo(data)}
@@ -128,7 +136,7 @@ const DetailsPage = () => {
                     <p><span className='text-white'>Đạo diễn</span> : {data?.Directors?.[0]?.Name}</p>
                     <Divider/>
                     <p>
-                        <span className='text-white'>Diễn viên : {data?.Actors?.join(", ")}</span>
+                        <span className='text-white'>Diễn viên: {data?.Actors?.map(actor => actor.Name).join(", ")}</span>
                     </p>
                 </div>
             </div>

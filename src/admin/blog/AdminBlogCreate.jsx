@@ -14,6 +14,7 @@ const AdminBlogCreate = () => {
     image: null,
     imagePreview: null, // Dùng để hiển thị preview ảnh
   });
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -49,13 +50,16 @@ const AdminBlogCreate = () => {
       const response = await axios.post("/api/blog", data, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`, // Thay thế bằng token thật từ KeycloakService
+          Authorization: `Bearer ${token}`,
         },
       });
 
       if (response.data && response.data.status === 200) {
-        alert(response.data.message || "Tạo bài viết thành công!");
-        navigate("/admin/blog");
+        setSuccessMessage(response.data.message || "Tạo bài viết thành công!");
+        setTimeout(() => {
+          setSuccessMessage("");
+          navigate("/admin/blog");
+        }, 3000);
       } else {
         alert(response.data?.message || "Có lỗi xảy ra, vui lòng thử lại.");
       }
@@ -67,9 +71,12 @@ const AdminBlogCreate = () => {
 
   return (
     <div className="container mx-auto p-8">
-      <h1 className="text-4xl font-semibold text-gray-800 mb-8">
-        Thêm Bài Viết
-      </h1>
+      {successMessage && (
+        <div className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50">
+          {successMessage}
+        </div>
+      )}
+      <h1 className="text-4xl font-semibold text-gray-800 mb-8">Thêm Bài Viết</h1>
       <form
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-lg shadow-lg"
